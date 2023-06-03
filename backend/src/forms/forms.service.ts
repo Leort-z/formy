@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common'
-import { CreateFormDto } from './dto/create-form.dto'
-import { UpdateFormDto } from './dto/update-form.dto'
+import { FormsRepository } from './repositories/forms-repository'
+import { FormMapper } from './mappers/forms-mapper'
+import { CreateFormDto } from './dtos/create-form.dto'
+import { FormDto } from './dtos/form.dto'
 
 @Injectable()
 export class FormsService {
-  create(createFormDto: CreateFormDto) {
-    return 'This action adds a new form'
+  constructor(private formsRepository: FormsRepository) {}
+
+  async create(dto: CreateFormDto): Promise<FormDto> {
+    const form = FormMapper.toEntity(dto)
+    const persistedForm = await this.formsRepository.create(form)
+    return FormMapper.toDto(persistedForm)
   }
 
   findAll() {
@@ -16,9 +22,9 @@ export class FormsService {
     return `This action returns a #${id} form`
   }
 
-  update(id: number, updateFormDto: UpdateFormDto) {
-    return `This action updates a #${id} form`
-  }
+  // update(id: number, dto: FormDto) {
+  //   return `This action updates a #${id} form ${dto}`
+  // }
 
   remove(id: number) {
     return `This action removes a #${id} form`
