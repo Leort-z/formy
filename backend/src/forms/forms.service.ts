@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { FormsRepository } from './repositories/forms-repository'
-import { FormMapper } from './mappers/forms-mapper'
+import { UUID } from 'crypto'
 import { CreateFormDto } from './dtos/create-form.dto'
 import { FormDto } from './dtos/form.dto'
+import { FormNotFound } from './errors/FormNotFound'
+import { FormMapper } from './mappers/forms-mapper'
+import { FormsRepository } from './repositories/forms-repository'
 
 @Injectable()
 export class FormsService {
@@ -14,19 +16,25 @@ export class FormsService {
     return FormMapper.toDto(persistedForm)
   }
 
-  findAll() {
-    return `This action returns all forms`
+  async findAll(): Promise<FormDto[]> {
+    const forms = await this.formsRepository.findAll()
+    return forms.map(FormMapper.toDto)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} form`
+  async findOne(id: UUID): Promise<FormDto> {
+    const form = await this.formsRepository.findOne(id)
+    if (!form) throw new FormNotFound()
+    return FormMapper.toDto(form)
   }
 
-  // update(id: number, dto: FormDto) {
-  //   return `This action updates a #${id} form ${dto}`
-  // }
+  async update(id: UUID, dto: CreateFormDto): Promise<FormDto> {
+    const form = FormMapper.toEntity(dto)
+    const persistedForm = await this.formsRepository.update(id, form)
+    if (!persistedForm) throw new FormNotFound()
+    return FormMapper.toDto(persistedForm)
+  }
 
-  remove(id: number) {
-    return `This action removes a #${id} form`
+  async remove(id: UUID): Promise<void> {
+    await this.formsRepository.remove(id)
   }
 }

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
-import { FormsService } from './forms.service'
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+import { UUID } from 'crypto'
 import { CreateFormDto } from './dtos/create-form.dto'
 import { FormDto } from './dtos/form.dto'
+import { FormsService } from './forms.service'
 
 @Controller('forms')
 export class FormsController {
@@ -13,22 +14,22 @@ export class FormsController {
   }
 
   @Get()
-  findAll() {
-    return this.formsService.findAll()
+  async findAll(): Promise<FormDto[]> {
+    return await this.formsService.findAll()
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.formsService.findOne(+id)
+  async findOne(@Param('id') id: UUID): Promise<FormDto> {
+    return await this.formsService.findOne(id)
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateFormDto: UpdateFormDto) {
-  //   return this.formsService.update(+id, updateFormDto)
-  // }
+  @Patch(':id')
+  async update(@Param('id') id: UUID, @Body() form: CreateFormDto): Promise<FormDto> {
+    return await this.formsService.update(id, form)
+  }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.formsService.remove(+id)
+  async remove(@Param('id') id: UUID): Promise<void> {
+    await this.formsService.remove(id)
   }
 }

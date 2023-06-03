@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client'
-import { CreateFormDto } from '../dtos/create-form.dto'
-import { Form } from '../entities/form.entity'
-import { FormDto } from '../dtos/form.dto'
 import { UUID } from 'crypto'
+import { CreateFormDto } from '../dtos/create-form.dto'
+import { FormDto } from '../dtos/form.dto'
+import { Form } from '../entities/form.entity'
 
 export class FormMapper {
   static toEntity(dto: CreateFormDto): Form {
@@ -16,9 +16,9 @@ export class FormMapper {
     return {
       id: form.id,
       name: form.name,
+      description: form.description,
       createdAt: form.createdAt,
       updatedAt: form.updatedAt,
-      description: form.description,
     }
   }
 
