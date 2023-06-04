@@ -8,10 +8,26 @@ datasource db {
 }
 
 model Form {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
   description String?
-  created_at  DateTime
-  updated_at  DateTime
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
   status      String
+  questions   Question[]
+}
+
+model Question {
+  id         String   @id @default(uuid())
+  title      String
+  help_text  String?
+  order      Int
+  type       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  status     String
+  form_id    String
+  Form       Form     @relation(fields: [form_id], references: [id])
+
+  @@unique([form_id, order])
 }
