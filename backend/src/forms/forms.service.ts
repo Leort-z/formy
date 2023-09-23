@@ -5,10 +5,11 @@ import { FormDto } from './dtos/form.dto'
 import { FormNotFound } from './errors/FormNotFound'
 import { FormMapper } from './mappers/forms-mapper'
 import { FormsRepository } from './repositories/forms-repository'
+import { Form } from './entities/form.entity'
 
 @Injectable()
 export class FormsService {
-  constructor(private formsRepository: FormsRepository) {}
+  constructor(private formsRepository: FormsRepository) { }
 
   async create(dto: CreateFormDto): Promise<FormDto> {
     const form = FormMapper.toEntity(dto)
@@ -21,9 +22,14 @@ export class FormsService {
     return forms.map(FormMapper.toDto)
   }
 
-  async findOne(id: UUID): Promise<FormDto> {
+  async findOne(id: UUID): Promise<Form> {
     const form = await this.formsRepository.findOne(id)
     if (!form) throw new FormNotFound()
+    return form
+  }
+
+  async getOne(id: UUID): Promise<FormDto> {
+    const form = await this.findOne(id)
     return FormMapper.toDto(form)
   }
 

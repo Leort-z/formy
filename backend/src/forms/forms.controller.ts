@@ -20,7 +20,7 @@ export class FormsController {
 
   @Get(':id')
   async findOne(@Param('id') id: UUID): Promise<FormDto> {
-    return await this.formsService.findOne(id)
+    return await this.formsService.getOne(id)
   }
 
   @Patch(':id')

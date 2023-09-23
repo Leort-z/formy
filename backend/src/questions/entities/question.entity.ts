@@ -4,7 +4,7 @@ import { Form } from 'src/forms/entities/form.entity'
 export class Question {
   private _id: UUID
   private _title: string
-  private _helpText?: string | null
+  private _helpText: string | null
   private _order: number
   private _type: string
   private _createdAt: Date
@@ -28,11 +28,11 @@ export class Question {
     this._title = title
   }
 
-  public get helpText(): string | undefined | null {
+  public get helpText(): string | null {
     return this._helpText
   }
 
-  public set helpText(helpText: string | undefined | null) {
+  public set helpText(helpText: string | null) {
     this._helpText = helpText
   }
 
